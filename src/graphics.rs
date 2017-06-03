@@ -131,11 +131,10 @@ impl GraphicsOutputProtocol {
         r.max_mode
     }
 
-    pub fn draw(&self, pixels: &[Pixel], dest_x: usize, dest_y: usize, width: usize, height: usize) -> Status {
+    pub fn draw(&self, pixels: *mut Pixel, dest_x: usize, dest_y: usize, width: usize, height: usize) -> Status {
         // assuming BlueGreenRed here for delta
         unsafe {
-            let px = pixels.as_ptr() as *mut Pixel;
-            (self.blt)(self, px, BltOperation::BufferToVideo, 0, 0, dest_x, dest_y, width, height, 0)
+            (self.blt)(self, pixels, BltOperation::BufferToVideo, 0, 0, dest_x, dest_y, width, height, 0)
         }
     }
 }
