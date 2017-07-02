@@ -32,7 +32,7 @@ impl Pixel {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 #[repr(u32)]
 pub enum PixelFormat {
     /// PixelRedGreenBlueReserved8BitPerColor
@@ -100,6 +100,11 @@ impl Protocol for GraphicsOutputProtocol {
 }
 
 impl GraphicsOutputProtocol {
+    pub fn new() -> Result<&'static GraphicsOutputProtocol, Status> {
+        let bs = ::systemtable::get_system_table().boot_services();
+        bs.locate_protocol::<GraphicsOutputProtocol>()
+    }
+
     pub fn query_mode(&self, mode_number: u32) -> Result<ModeInformation, Status> {
         let mut sz : usize = 0;
         let mut mip : *mut ModeInformation = ptr::null_mut();
@@ -119,6 +124,11 @@ impl GraphicsOutputProtocol {
     pub fn set_mode(&self, mode_number: u32) -> Status {
         let status = unsafe { (self.set_mode)(self, mode_number) };
         return status;
+    }
+
+    pub fn get_max_mode(&self) -> u32 {
+        let r = unsafe{&*self.mode};
+        r.max_mode
     }
 
     pub fn draw(&self, pixels: &[Pixel], dest_x: usize, dest_y: usize, width: usize, height: usize) -> Status {
