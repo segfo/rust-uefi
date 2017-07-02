@@ -2,8 +2,9 @@ use core::ptr;
 
 use base::Status;
 use guid::Guid;
+use protocols::Protocol;
 
-pub static EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID: Guid = Guid(0x9042a9de, 0x23dc, 0x4a38, [0x96,0xfb,0x7a,0xde,0xd0,0x80,0x51,0x6a]);
+pub const EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID: Guid = Guid(0x9042a9de, 0x23dc, 0x4a38, [0x96,0xfb,0x7a,0xde,0xd0,0x80,0x51,0x6a]);
 
 #[derive(Clone, Copy, Debug)]
 #[repr(C)]
@@ -92,8 +93,8 @@ pub struct GraphicsOutputProtocol {
     mode: *mut Mode,
 }
 
-impl ::Protocol for GraphicsOutputProtocol {
-    fn guid() -> &'static Guid {
+impl Protocol for GraphicsOutputProtocol {
+    fn guid() -> *const Guid {
         return &EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
     }
 }
