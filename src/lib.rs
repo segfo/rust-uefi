@@ -11,7 +11,10 @@ mod runtimeservices;
 mod protocols;
 mod console;
 
+pub mod graphics;
+
 pub use base::{Handle, Handles, Event, MemoryType, MemoryDescriptor, Status, Time};
+
 pub use guid::*;
 
 pub use systemtable::*;
