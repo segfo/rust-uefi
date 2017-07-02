@@ -56,7 +56,7 @@ pub struct BootServices {
     open_protocol_information: *const NotYetDef,
     protocols_per_handle: *const NotYetDef,
     locate_handle_buffer: unsafe extern "win64" fn(search_type: LocateSearchType, protocol: *const guid::Guid, search_key: *const CVoid, nhandles: *mut usize, handles: *mut *mut CVoid) -> Status,
-    locate_protocol: *const NotYetDef,
+    locate_protocol: unsafe extern "win64" fn(protocol: *const guid::Guid, registration: *mut CVoid, interface: *mut *mut CVoid) -> Status,
     install_multiple_protocol_interfaces: *const NotYetDef,
     uninstall_multiple_protocol_interfaces: *const NotYetDef,
     calculate_crc32: *const NotYetDef,
@@ -140,6 +140,23 @@ impl BootServices {
 
         unsafe {
             (self.close_protocol)(handle, guid, agent_handle, controller_handle)
+        }
+    }
+
+    pub fn locate_protocol<T: protocols::Protocol>(&self) -> Result<&'static T, Status> {
+        let guid = T::guid();
+        let ptr : *mut CVoid = ptr::null_mut();
+        let mut interface = try!(self.allocate_pool::<T>(mem::size_of::<T>()));
+
+        let status = unsafe {
+            (self.locate_protocol)(guid, ptr, mem::transmute::<&mut *mut T, *mut *mut CVoid>(&mut interface))
+        };
+
+        if status == Status::Success {
+            unsafe{ Ok(mem::transmute::<*mut T, &'static T>(interface)) }
+        } else {
+            self.free_pool::<T>(interface);
+            Err(status)
         }
     }
 
