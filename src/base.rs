@@ -2,6 +2,8 @@ use core::{default, fmt, ptr, slice};
 
 use void::CVoid;
 
+use systemtable;
+
 /// Type for EFI_HANDLE.
 #[derive(Copy, Clone, Debug)]
 #[repr(C)]
