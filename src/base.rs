@@ -232,3 +232,11 @@ pub struct MemoryDescriptor {
     number_of_pages: u64,
     attribute: u64
 }
+
+impl MemoryDescriptor{
+    pub fn type_of_memory(&self)->MemoryType{self.memory_type.clone()}
+    pub fn physical_start(&self)->PhysicalAddress{self.physical_start}
+    pub fn virtual_start(&self)->VirtualAddress{self.virtual_start}
+    pub fn number_of_pages(&self)->u64{self.number_of_pages}
+    pub fn attribute(&self)->u64{self.attribute}
+}
