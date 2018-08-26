@@ -235,8 +235,8 @@ pub struct MemoryDescriptor {
 
 impl MemoryDescriptor{
     pub fn type_of_memory(&self)->MemoryType{self.memory_type.clone()}
-    pub fn physical_start(&self)->PhysicalAddress{self.physical_start}
-    pub fn virtual_start(&self)->VirtualAddress{self.virtual_start}
-    pub fn number_of_pages(&self)->u64{self.number_of_pages}
-    pub fn attribute(&self)->u64{self.attribute}
+    pub fn physical_start(&self)->usize{self.physical_start as usize}
+    pub fn virtual_start(&self)->usize{self.virtual_start as usize}
+    pub fn number_of_pages(&self)->usize{self.number_of_pages as usize}
+    pub fn attribute(&self)->usize{self.attribute as usize}
 }
